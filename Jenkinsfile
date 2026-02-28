@@ -3,9 +3,9 @@ pipeline {
 
     stages {
 
-        stage('Clone Repository') {
+        stage('Checkout SCM') {
             steps {
-                echo 'Cloning repository...'
+                echo 'Checking out source code...'
                 checkout scm
             }
         }
@@ -19,10 +19,12 @@ pipeline {
 
         stage('Run Container') {
             steps {
-                echo 'Running Docker container...'
+                echo 'Stopping old container if exists...'
                 sh 'docker stop dockops-container || true'
                 sh 'docker rm dockops-container || true'
-                sh 'docker run -d -p 8080:80 --name dockops-container dockopswebsite'
+
+                echo 'Running new container on port 8082...'
+                sh 'docker run -d -p 8082:80 --name dockops-container dockopswebsite'
             }
         }
     }
